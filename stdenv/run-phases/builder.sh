@@ -1,0 +1,2 @@
+source $setupRunPhases
+genericBuild
