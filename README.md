@@ -197,6 +197,12 @@ installPhase()
 genericBuild
 ```
 
+We can inject arbitrary code into a build process by defining a `pre<phase>` or
+`post<phase>` hook.
+
+We can also define an `exitHook` to execute code when a build completes
+successfully or a `failureHook` to execute code when the build fails.
+
 Layer 5: The generic build abstraction
 --------------------------------------
 The `stdenv.genericBuild` abstraction adds implementations for common build
