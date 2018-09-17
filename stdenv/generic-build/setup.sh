@@ -16,7 +16,7 @@ unpackFile()
         done
     elif [ -d "$src" ]
     then
-        cp -a "$src" .
+        cp -a "$src" . && hasUnpacked=1
     fi
 
     if [ "$hasUnpacked" = "0" ]
