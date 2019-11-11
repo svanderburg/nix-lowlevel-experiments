@@ -1,0 +1,59 @@
+#!/bin/bash -e
+
+rcnew="$1"
+rcold="$2"
+
+containsElement()
+{
+    local element match="$1"
+    shift
+
+    for element
+    do
+        [[ "$element" == "$match" ]] && return 0
+    done
+    return 1
+}
+
+# Determine paths of old scripts
+
+oldscripts=()
+
+if [ "$rcold" != "" ]
+then
+    for i in $(ls $rcold/S* | sort -r)
+    do
+        path=$(readlink -f $i)
+        oldscripts+=($path)
+    done
+fi
+
+# Determine paths of new scripts
+
+newscripts=()
+
+for i in $(ls $rcnew/S*)
+do
+    path=$(readlink -f $i)
+    newscripts+=($path)
+done
+
+# Stop obsolete scripts
+
+for i in ${oldscripts[@]}
+do
+    if ! containsElement "$i" "${newscripts[@]}"
+    then
+        $i stop
+    fi
+done
+
+# Start new scripts
+
+for i in ${newscripts[@]}
+do
+    if ! containsElement "$i" "${oldscripts[@]}"
+    then
+        $i start
+    fi
+done
